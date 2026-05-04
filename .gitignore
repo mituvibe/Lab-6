@@ -1,0 +1,5 @@
+data/
+model/
+*.pkl
+*.parquet
+alerts.log

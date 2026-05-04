@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 6 — An Toàn Hệ Thống Thông Tin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-card-hover: #22222e;
+            --bg-input: #0d0d14;
+            --border: #2a2a3a;
+            --border-light: #333344;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a8;
+            --text-muted: #5a5a70;
+            --accent-1: #6366f1;
+            --accent-1-dim: rgba(99,102,241,0.12);
+            --accent-2: #22d3ee;
+            --accent-2-dim: rgba(34,211,238,0.12);
+            --accent-3: #f472b6;
+            --accent-3-dim: rgba(244,114,182,0.12);
+            --accent-4: #4ade80;
+            --accent-4-dim: rgba(74,222,128,0.12);
+            --accent-5: #fb923c;
+            --accent-5-dim: rgba(251,146,60,0.12);
+            --accent-6: #fbbf24;
+            --accent-6-dim: rgba(251,191,36,0.12);
+            --danger: #ef4444;
+            --success: #22c55e;
+            --radius: 14px;
+            --radius-sm: 8px;
+            --radius-xs: 5px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .stat-number {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-1);
+        }
+
+        .stat-number.done { color: var(--success); }
+
+        /* Nav tabs */
+        .nav-tabs {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+        }
+
+        .nav-tabs-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            padding: 12px 0;
+        }
+
+        .nav-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--bg-card);
+            border-color: var(--border);
+            color: var(--text-primary);
+        }
+
+        .nav-tab .tab-icon {
+            font-size: 15px;
+        }
+
+        .nav-tab .tab-progress {
+            font-size: 11px;
+            background: var(--bg-primary);
+            padding: 2px 6px;
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px 80px;
+        }
+
+        /* Section */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Hero card */
+        .hero-card {
+            background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,211,238,0.05));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-1-dim);
+            color: var(--accent-1);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #e8e8f0, #9090a8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            max-width: 700px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--border-light);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            cursor: pointer;
+            user-select: none;
+            gap: 16px;
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .card-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .card-check {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid var(--border-light);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .card-check.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .card-check.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .card-body {
+            padding: 0 24px 20px;
+            display: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-body.open {
+            display: block;
+            padding-top: 20px;
+        }
+
+        /* Todo items */
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(42,42,58,0.5);
+        }
+
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+
+        .todo-checkbox {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            border-radius: 5px;
+            border: 2px solid var(--border-light);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin-top: 2px;
+        }
+
+        .todo-checkbox:hover {
+            border-color: var(--accent-1);
+        }
+
+        .todo-checkbox.checked {
+            background: var(--accent-1);
+            border-color: var(--accent-1);
+        }
+
+        .todo-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .todo-content {
+            flex: 1;
+        }
+
+        .todo-text {
+            font-size: 13.5px;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .todo-text.done {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .todo-tag {
+            display: inline-flex;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            vertical-align: middle;
+            letter-spacing: 0.3px;
+        }
+
+        .tag-theory { background: var(--accent-6-dim); color: var(--accent-6); }
+        .tag-practice { background: var(--accent-2-dim); color: var(--accent-2); }
+        .tag-code { background: var(--accent-1-dim); color: var(--accent-1); }
+        .tag-config { background: var(--accent-5-dim); color: var(--accent-5); }
+        .tag-test { background: var(--accent-4-dim); color: var(--accent-4); }
+
+        /* Theory block */
+        .theory-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .theory-block h4 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theory-block h4 .icon { font-size: 15px; }
+
+        .theory-block p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .theory-block p:last-child { margin-bottom: 0; }
+
+        .theory-block ul {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .theory-block ul li {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            padding: 4px 0 4px 20px;
+            position: relative;
+        }
+
+        .theory-block ul li::before {
+            content: '›';
+            position: absolute;
+            left: 6px;
+            color: var(--accent-1);
+            font-weight: 700;
+        }
+
+        /* Architecture diagram */
+        .arch-diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        /* Table */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .info-table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border);
+        }
+
+        .info-table td {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        .info-table tr:hover td {
+            background: rgba(99,102,241,0.04);
+        }
+
+        .info-table code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: var(--bg-input);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent-2);
+        }
+
+        /* Steps */
+        .step {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+        }
+
+        .step-num {
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            border-radius: 50%;
+            background: var(--accent-1-dim);
+            color: var(--accent-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 1px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        /* Progress bar */
+        .progress-bar-wrap {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-bar-flex {
+            flex: 1;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .progress-track {
+            height: 6px;
+            background: var(--bg-primary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            transition: width 0.4s ease;
+        }
+
+        /* Feature list */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .feature-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            font-size: 16px;
+            margin-top: 1px;
+        }
+
+        .feature-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .feature-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Alert box */
+        .alert-box {
+            background: rgba(251,191,36,0.08);
+            border: 1px solid rgba(251,191,36,0.25);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            font-size: 13px;
+            color: var(--accent-6);
+            margin-bottom: 16px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .alert-box.danger {
+            background: rgba(239,68,68,0.08);
+            border-color: rgba(239,68,68,0.25);
+            color: var(--danger);
+        }
+
+        .alert-icon { font-size: 16px; margin-top: 1px; }
+
+        /* Section label */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin: 24px 0 12px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Summary card */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(34,211,238,0.04));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .objective-list {
+            list-style: none;
+        }
+
+        .objective-list li {
+            padding: 8px 0;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .objective-list li .num {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border-radius: 50%;
+            background: var(--accent-1-dim);
+            color: var(--accent-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 1px;
+        }
+
+        /* Footer progress */
+        .footer-progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18,18,26,0.9);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 12px 24px;
+            z-index: 100;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .footer-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--bg-input);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .footer-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--success), var(--accent-4));
+            transition: width 0.4s ease;
+        }
+
+        .footer-pct {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--success);
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 11px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Reset button */
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* Expand chevron */
+        .chevron {
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            margin-left: auto;
+        }
+
+        .chevron.open {
+            transform: rotate(180deg);
+        }
+
+        /* Code block */
+        .code-block {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent-2);
+            overflow-x: auto;
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb span { color: var(--accent-1); font-weight: 600; }
+
+        @media (max-width: 768px) {
+            .header-stats { display: none; }
+            .hero-title { font-size: 22px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .main { padding: 20px 16px 100px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-inner">
+        <div class="header-brand">
+            <div class="header-logo">🛡️</div>
+            <div>
+                <div class="header-title">Lab 6 — An Toàn Hệ Thống Thông Tin</div>
+                <div class="header-subtitle">HKII Năm 3</div>
+            </div>
+        </div>
+        <div class="header-stats">
+            <div class="stat-item">
+                <span>Đã hoàn thành:</span>
+                <span class="stat-number done" id="stat-done">0</span>
+                <span>/</span>
+                <span class="stat-number" id="stat-total">0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+    <div class="nav-tabs-inner">
+        <button class="nav-tab active" onclick="switchTab('overview')">
+            <span class="tab-icon">📋</span>
+            Tổng quan
+        </button>
+        <button class="nav-tab" onclick="switchTab('soc-lab')">
+            <span class="tab-icon">🔐</span>
+            SOC Lab — Wazuh
+            <span class="tab-progress" id="prog-soc">0/0</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('ids-ml')">
+            <span class="tab-icon">🤖</span>
+            IDS + Machine Learning
+            <span class="tab-progress" id="prog-ids">0/0</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab('acl')">
+            <span class="tab-icon">🔀</span>
+            Standard ACLs
+            <span class="tab-progress" id="prog-acl">0/0</span>
+        </button>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+    <!-- ======================== OVERVIEW ======================== -->
+    <div class="section active" id="section-overview">
+
+        <div class="hero-card">
+            <div class="hero-badge">📚 Tài liệu Lab</div>
+            <div class="hero-title">Tổng hợp Lý thuyết &amp; Hướng dẫn</div>
+            <div class="hero-desc">
+                Lab 6 gồm 3 phần: (1) Xây dựng SOC Home Lab với Wazuh, (2) IDS phát hiện xâm nhập bằng Machine Learning, (3) Cấu hình Standard ACLs. Click vào từng tab để xem nội dung chi tiết và đánh dấu hoàn thành.
+            </div>
+        </div>
+
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-flex">
+                <div class="progress-label">
+                    <span>Tiến độ tổng thể</span>
+                    <span id="pct-overall">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="fill-overall" style="width:0%"></div>
+                </div>
+            </div>
+            <button class="reset-btn" onclick="resetAll()">Reset all</button>
+        </div>
+
+        <!-- 3-column overview cards -->
+        <div class="feature-grid">
+            <div class="feature-item" style="border-color:rgba(99,102,241,0.3)">
+                <span class="feature-icon">🔐</span>
+                <div>
+                    <div class="feature-label">SOC Lab — Wazuh</div>
+                    <div class="feature-desc">Xây dựng trung tâm giám sát an ninh mạng với Wazuh SIEM/XDR, pfSense, Suricata, Sysmon, VirusTotal &amp; FIM</div>
+                </div>
+            </div>
+            <div class="feature-item" style="border-color:rgba(34,211,238,0.3)">
+                <span class="feature-icon">🤖</span>
+                <div>
+                    <div class="feature-label">IDS + Machine Learning</div>
+                    <div class="feature-desc">Xây dựng IDS thông minh dùng ML với dataset CICIDS2017, so sánh 5 mô hình, chọn Random Forest</div>
+                </div>
+            </div>
+            <div class="feature-item" style="border-color:rgba(244,114,182,0.3)">
+                <span class="feature-icon">🔀</span>
+                <div>
+                    <div class="feature-label">Standard ACLs</div>
+                    <div class="feature-desc">Cấu hình Access Control Lists trên thiết bị mạng Cisco trong Packet Tracer để kiểm soát truy cập</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3-layer defense -->
+        <div class="section-label">Kiến trúc phòng thủ 3 tầng</div>
+        <div class="arch-diagram">
+┌──────────────────────────────────────────────────────────────┐
+│                    INTERNET / EXTERNAL                        │
+└─────────────────────┬────────────────────────────────────────┘
+                      │
+┌─────────────────────▼────────────────────────────────────────┐
+│  TẦNG 1 — NETWORK     │  ACLs (Standard/Extended)            │
+│  Kiểm soát truy cập  │  Router/Switch Cisco                  │
+│  Ai được đi qua?     │  Cấu hình Packet Tracer               │
+└─────────────────────┬────────────────────────────────────────┘
+                      │
+┌─────────────────────▼────────────────────────────────────────┐
+│  TẦNG 2 — IDS/IPS     │  Suricata + Random Forest ML          │
+│  Phát hiện xâm nhập   │  CICIDS2017 Dataset                    │
+│  Lưu lượng bất thường │  Real-time Alert Generation            │
+└─────────────────────┬────────────────────────────────────────┘
+                      │
+┌─────────────────────▼────────────────────────────────────────┐
+│  TẦNG 3 — SOC/SIEM    │  Wazuh + pfSense + Sysmon              │
+│  Giám sát &amp; Phản hồi  │  VirusTotal + FIM + Brute Force Detect    │
+│  Thu thập &amp; Tương quan │  Alert Triage &amp; Incident Response      │
+└──────────────────────────────────────────────────────────────┘</div>
+
+        <!-- Summary -->
+        <div class="summary-card">
+            <div class="summary-title">🎯 Mục tiêu toàn Lab 6</div>
+            <ul class="objective-list">
+                <li>
+                    <span class="num">1</span>
+                    <span>Xây dựng môi trường SOC hoàn chỉnh với các công cụ open-source (Wazuh, pfSense, Suricata, Sysmon) — lặp lại các thành phần cốt lõi của một SOC hiện đại.</span>
+                </li>
+                <li>
+                    <span class="num">2</span>
+                    <span>Giám sát và phát hiện mối đe dọa: thu thập log từ nhiều nguồn, phân tích tương quan sự kiện, giám sát tính toàn vẹn file, tích hợp threat intelligence (VirusTotal).</span>
+                </li>
+                <li>
+                    <span class="num">3</span>
+                    <span>Xây dựng IDS thông minh bằng Machine Learning: hiểu dữ liệu mạng, xử lý mất cân bằng dữ liệu, train &amp; so sánh 5 mô hình ML, deploy để phát hiện xâm nhập real-time.</span>
+                </li>
+                <li>
+                    <span class="num">4</span>
+                    <span>Mô phỏng tấn công brute-force trong môi trường lab cách ly, xác minh khả năng phát hiện &amp; phản hồi của hệ thống SOC.</span>
+                </li>
+                <li>
+                    <span class="num">5</span>
+                    <span>Cấu hình Standard ACLs trên thiết bị mạng Cisco để kiểm soát ai được phép truy cập tài nguyên mạng ở tầng Network.</span>
+                </li>
+                <li>
+                    <span class="num">6</span>
+                    <span>Rèn luyện kỹ năng SOC analyst thực thụ: phân tích log, điều tra cảnh báo, viết rules phát hiện (Wazuh rules), ứng phó sự cố (Incident Response).</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ======================== SOC LAB ======================== -->
+    <div class="section" id="section-soc-lab">
+
+        <div class="hero-card">
+            <div class="hero-badge">🔐 Phần 1</div>
+            <div class="hero-title">SOC Home Lab — Wazuh SIEM/XDR</div>
+            <div class="hero-desc">Xây dựng trung tâm giám sát an ninh mạng với Wazuh, pfSense Firewall, Suricata IDS, Sysmon, VirusTotal, File Integrity Monitoring và mô phỏng tấn công brute-force.</div>
+        </div>
+
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-flex">
+                <div class="progress-label">
+                    <span>Tiến độ phần SOC Lab</span>
+                    <span id="pct-soc">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="fill-soc" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theory -->
+        <div class="section-label">📖 Lý thuyết nền tảng</div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🏢</span> SOC là gì?</h4>
+            <p><strong>Security Operations Center (SOC)</strong> là trung tâm giám sát an ninh mạng, nơi các chuyên gia phân tích log, phát hiện mối đe dọa, điều tra sự cố và ứng phó sự cố (IR — Incident Response) theo thời gian thực.</p>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">💾</span> SIEM vs XDR</h4>
+            <p><strong>SIEM</strong> (Security Information and Event Management): Thu thập, tổng hợp, phân tích log từ nhiều nguồn (endpoint, firewall, IDS...) nhằm phát hiện hành vi bất thường và tạo cảnh báo.</p>
+            <p><strong>XDR</strong> (Extended Detection and Response): Thế hệ kế tiếp của SIEM, tích hợp detection và response trên endpoint, network, server trong một nền tảng thống nhất.</p>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🗂️</span> Kiến trúc Lab</h4>
+            <div class="arch-diagram">
+┌─────────────────────┐      ┌───────────────────┐      ┌─────────────────┐
+│  Kali Linux         │      │ Windows 11 Pro    │      │  pfSense        │
+│  (Attacker)         │─────▶│ + Wazuh Agent     │◀─────│  Firewall       │
+│  + Hydra            │      │ + Sysmon          │      │  + Suricata IDS │
+└─────────────────────┘      └────────┬───────────┘      └────────┬────────┘
+                                      │                             │
+                                      └──────────────┬──────────────┘
+                                                     ▼
+                                      ┌──────────────────────────────┐
+                                      │   Wazuh Server               │
+                                      │  Manager + Indexer + Dashboard│
+                                      │  + VirusTotal API            │
+                                      └──────────────────────────────┘</div>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🛠️</span> Các thành phần trong Lab</h4>
+            <ul>
+                <li><strong>Wazuh Server</strong> — Nền tảng SIEM/XDR mã nguồn mở: Manager (thu thập log), Indexer (lưu trữ dữ liệu), Dashboard (trực quan hóa)</li>
+                <li><strong>Wazuh Agent</strong> — Agent chạy trên endpoint, thu thập log và chuyển về Wazuh Server</li>
+                <li><strong>pfSense</strong> — Firewall ảo hóa, cung cấp log firewall cho Wazuh</li>
+                <li><strong>Suricata</strong> — IDS/IPS: giám sát lưu lượng mạng, phát hiện xâm nhập, có chế độ passive (IDS) và active (IPS)</li>
+                <li><strong>Sysmon</strong> — Giám sát endpoint Windows, capture chi tiết system events</li>
+                <li><strong>VirusTotal</strong> — Threat intelligence: API lookup để enrich cảnh báo với dữ liệu uy tín</li>
+                <li><strong>FIM</strong> (File Integrity Monitoring) — Giám sát thay đổi file/thư mục real-time</li>
+                <li><strong>Hydra</strong> — Công cụ brute-force (chỉ dùng trong môi trường lab cách ly)</li>
+            </ul>
+        </div>
+
+        <!-- Setup Wazuh -->
+        <div class="section-label">💻 Thực hành — Cài đặt &amp; Cấu hình</div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-1-dim)">🖥️</div>
+                    <div>
+                        <div class="card-title">1. Cài đặt Wazuh Server &amp; Agent</div>
+                        <div class="card-meta">Deploy OVA trên VMware · Đăng ký Agent · Cấu hình Dashboard</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="theory-block">
+                    <h4><span class="icon">📝</span> Mục tiêu</h4>
+                    <ul>
+                        <li>Deploy Wazuh trên VMware bằng OVA package</li>
+                        <li>Cấu hình và khắc phục sự cố các service Wazuh</li>
+                        <li>Truy cập Dashboard để giám sát</li>
+                        <li>Cài đặt và đăng ký Wazuh Agent trên endpoint để thu thập log</li>
+                    </ul>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Các bước thực hiện</h4>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Deploy Wazuh OVA</div>
+                            <div class="step-desc">Tải official Wazuh OVA package từ trang chủ wazuh.com, import vào VMware và khởi động máy ảo. Truy cập Wazuh Dashboard qua trình duyệt (thường là https://&lt;IP&gt;:443).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Kiểm tra các service Wazuh</div>
+                            <div class="step-desc">Xác minh Wazuh Manager, Indexer và Dashboard đang chạy. Kiểm tra logs nếu có lỗi.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Cài đặt Wazuh Agent trên endpoint</div>
+                            <div class="step-desc">Cài đặt Wazuh Agent trên Windows 11 Pro, đăng ký agent với Wazuh Server bằng agent enrollment.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Xác minh agent kết nối</div>
+                            <div class="step-desc">Kiểm tra trên Wazuh Dashboard xem agent đã online và đang gửi log về server.</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Deploy Wazuh Server bằng OVA package <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Kiểm tra và khắc phục sự cố Wazuh services <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Cài đặt và đăng ký Wazuh Agent trên Windows endpoint <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Truy cập Wazuh Dashboard và xác minh agent online <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-2-dim)">🔍</div>
+                    <div>
+                        <div class="card-title">2. Tích hợp Suricata IDS/IPS</div>
+                        <div class="card-meta">Cài đặt Suricata trên Windows · Npcap · Detection rules · Log forwarding</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="theory-block">
+                    <h4><span class="icon">📖</span> Lý thuyết</h4>
+                    <p><strong>Suricata</strong> là một IDS/IPS engine mã nguồn mở, có thể hoạt động ở hai chế độ:</p>
+                    <ul>
+                        <li><strong>IDS (Intrusion Detection System)</strong>: Phát hiện xâm nhập thụ động — giám sát lưu lượng, sinh alerts nhưng không block.</li>
+                        <li><strong>IPS (Intrusion Prevention System)</strong>: Phòng ngừa xâm nhập chủ động — phát hiện và block threats theo rules.</li>
+                    </ul>
+                    <p style="margin-top:8px">Suricata sử dụng các detection rules để nhận diện mẫu tấn công trong network traffic. Rules được cập nhật thường xuyên từ các nguồn như ET Open (Emerging Threats).</p>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Các bước thực hiện</h4>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Cài đặt Suricata trên Windows</div>
+                            <div class="step-desc">Tải và cài đặt Suricata. Cài đặt Npcap (thư viện packet capture cho Windows) làm yêu cầu bắt buộc.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Cấu hình network interface</div>
+                            <div class="step-desc">Chỉ định network interface để Suricata giám sát (thường là card mạng kết nối internet).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Cấu hình detection rules</div>
+                            <div class="step-desc">Tải và kích hoạt các rule sets (ET Open). Kiểm tra cấu hình suricata.yaml.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Tích hợp logs với Wazuh</div>
+                            <div class="step-desc">Cấu hình Suricata EVE JSON log output. Cấu hình Wazuh Agent đọc và forward Suricata logs về Wazuh Server để tập trung hóa giám sát.</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Cài đặt Suricata và Npcap trên Windows <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Cấu hình detection rules và EVE JSON logging <span class="todo-tag tag-config">Cấu hình</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Tích hợp Suricata logs vào Wazuh Dashboard <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Kiểm tra IDS alerts trên Wazuh Dashboard <span class="todo-tag tag-test">Kiểm tra</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-3-dim)">🔥</div>
+                    <div>
+                        <div class="card-title">3. Tích hợp pfSense Firewall</div>
+                        <div class="card-meta">Deploy pfSense VM · Remote logging · Custom decoders &amp; rules</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="theory-block">
+                    <h4><span class="icon">📖</span> Lý thuyết</h4>
+                    <p><strong>pfSense</strong> là một firewall mã nguồn mở dựa trên FreeBSD, chạy được trên phần cứng thường hoặc máy ảo. Nó cung cấp khả năng:</p>
+                    <ul>
+                        <li>Stateful packet filtering</li>
+                        <li>VPN (IPSec, OpenVPN)</li>
+                        <li>Traffic shaping</li>
+                        <li>Remote syslog logging — gửi log về Wazuh</li>
+                    </ul>
+                    <p style="margin-top:8px">pfSense ghi log tất cả traffic được allow và deny, giúp SOC phân tích ai đang cố kết nối và bị block bởi firewall.</p>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Các bước thực hiện</h4>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Deploy pfSense trong VMware</div>
+                            <div class="step-desc">Tải pfSense ISO, tạo máy ảo mới, cấu hình network adapters (WAN + LAN).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Cấu hình Remote Logging</div>
+                            <div class="step-desc">Trên pfSense Web UI → Status → System Logs → Settings → Remote. Điền địa chỉ Wazuh Server để gửi syslog.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Tạo Custom Decoders</div>
+                            <div class="step-desc">Viết Wazuh decoder để parse pfSense log format. Decoder trích xuất các trường: source IP, destination IP, action (allow/deny), protocol, port.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Viết Custom Rules</div>
+                            <div class="step-desc">Tạo Wazuh rules để phát hiện: authentication failures từ pfSense, blocked connections, port scans.</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Deploy pfSense trong VMware và cấu hình mạng <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Bật remote syslog từ pfSense sang Wazuh <span class="todo-tag tag-config">Cấu hình</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Viết custom decoder để parse pfSense logs <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Viết Wazuh rules phát hiện firewall events <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-4-dim)">🦠</div>
+                    <div>
+                        <div class="card-title">4. Tích hợp VirusTotal API</div>
+                        <div class="card-meta">API key · Wazuh Integration · Real-time lookup · Alert enrichment</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="theory-block">
+                    <h4><span class="icon">📖</span> Lý thuyết</h4>
+                    <p><strong>VirusTotal</strong> là dịch vụ phân tích mối nguy (threat intelligence) miễn phí. Nó tổng hợp kết quả từ hàng chục antivirus engines và threat intelligence feeds.</p>
+                    <p>Wazuh tích hợp VirusTotal API để khi phát hiện file hash hoặc IP đáng ngờ, hệ thống sẽ tự động tra cứu VirusTotal và enrich alert với:</p>
+                    <ul>
+                        <li>Detection rate (bao nhiêu AV engines phát hiện là malware)</li>
+                        <li>Threat category (trojan, ransomware, etc.)</li>
+                        <li>First submission date, file type, etc.</li>
+                    </ul>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Các bước thực hiện</h4>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Đăng ký VirusTotal API key</div>
+                            <div class="step-desc">Tạo tài khoản tại virustotal.com, vào Profile → API key, copy API key.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Cấu hình Wazuh Manager</div>
+                            <div class="step-desc">Thêm VirusTotal API key vào ossec.conf trên Wazuh Manager. Bật moduleVirusTotal.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Cấu hình Wazuh Agent giám sát thư mục</div>
+                            <div class="step-desc">Trong ossec.conf trên agent, thêm thư mục cần giám sát với real-time monitoring. Bật VirusTotal lookup cho syscheck.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Xác minh alert enrichment</div>
+                            <div class="step-desc">Tạo file mới trong thư mục giám sát, kiểm tra Wazuh Dashboard để thấy alert được enrich với VirusTotal data.</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Đăng ký và lấy VirusTotal API key <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Cấu hình VirusTotal module trong ossec.conf <span class="todo-tag tag-config">Cấu hình</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Bật real-time monitoring với VirusTotal lookup <span class="todo-tag tag-config">Cấu hình</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Xác minh alert enrichment trên Wazuh Dashboard <span class="todo-tag tag-test">Kiểm tra</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-5-dim)">📄</div>
+                    <div>
+                        <div class="card-title">5. File Integrity Monitoring (FIM)</div>
+                        <div class="card-meta">Cấu hình syscheck · Real-time monitoring · Xác minh alerts</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="theory-block">
+                    <h4><span class="icon">📖</span> Lý thuyết</h4>
+                    <p><strong>Wazuh FIM</strong> (File Integrity Monitoring) giám sát các thư mục và file quan trọng trên endpoint. Khi có thay đổi (create, modify, delete), Wazuh tạo alert ngay lập tức.</p>
+                    <p>Điều này rất quan trọng để phát hiện:</p>
+                    <ul>
+                        <li>Temporary file từ malware</li>
+                        <li>Thay đổi file hệ thống bởi attacker</li>
+                        <li>File mới được tạo bởi attacker</li>
+                        <li>Cấu hình bị sửa đổi (registry, config files)</li>
+                    </ul>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Các bước thực hiện</h4>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Cấu hình syscheck trong ossec.conf</div>
+                            <div class="step-desc">Thêm thẻ &lt;syscheck&gt; vào ossec.conf trên agent. Liệt kê các thư mục cần giám sát (VD: C:\Windows\System32, C:\Users).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Bật real-time monitoring</div>
+                            <div class="step-desc">Thêm thuộc tính realtime="yes" cho các thư mục. Bật recursion="yes" để giám sát cả thư mục con.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Xác minh hoạt động</div>
+                            <div class="step-desc">Tạo file mới → kiểm tra alert "File added". Sửa file → kiểm tra alert "File modified". Xóa file → kiểm tra alert "File deleted".</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="code-block">
+&lt;syscheck&gt;
+  &lt;directories check_all="yes" realtime="yes"&gt;C:\Users\Documents&lt;/directories&gt;
+  &lt;directories check_all="yes" whodata="yes"&gt;C:\Windows\System32&lt;/directories&gt;
+&lt;/syscheck&gt;</div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Cấu hình syscheck trong ossec.conf với thư mục cần giám sát <span class="todo-tag tag-config">Cấu hình</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Bật real-time monitoring và recursion <span class="todo-tag tag-config">Cấu hình</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Xác minh: tạo → alert "added", sửa → alert "modified", xóa → alert "deleted" <span class="todo-tag tag-test">Kiểm tra</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-6-dim)">📋</div>
+                    <div>
+                        <div class="card-title">6. Logs &amp; Sysmon Ingestion</div>
+                        <div class="card-meta">Windows Event Logs · Sysmon · Event ID quan trọng · Wazuh ingestion</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="theory-block">
+                    <h4><span class="icon">📖</span> Lý thuyết — Windows Event Logs</h4>
+                    <p>Windows lưu trữ log trong Event Viewer với các channel chính:</p>
+                    <table class="info-table">
+                        <tr><th>Channel</th><th>Mô tả</th><th>Event IDs quan trọng</th></tr>
+                        <tr><td>Security</td><td>Authentication &amp; audit</td><td><code>4624</code> (login success), <code>4625</code> (login fail), <code>4634</code> (logoff), <code>4672</code> (admin privilege)</td></tr>
+                        <tr><td>System</td><td>System-level events</td><td><code>6008</code> (unexpected shutdown), <code>7045</code> (new service)</td></tr>
+                        <tr><td>Application</td><td>App-level events</td><td><code>1000</code>-<code>1001</code> (crash/error)</td></tr>
+                    </table>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">📖</span> Lý thuyết — Sysmon</h4>
+                    <p><strong>Sysmon</strong> (System Monitor) của Microsoft Sysinternals cung cấp log chi tiết hơn Event Viewer thôngường. Nó ghi:</p>
+                    <ul>
+                        <li>Process creation/termination (Event ID 1)</li>
+                        <li>Network connections (Event ID 3)</li>
+                        <li>File creation (Event ID 11)</li>
+                        <li>Registry changes (Event ID 12-14)</li>
+                        <li>Drive access (Event ID 9)</li>
+                        <li>WMI events (Event ID 19-21)</li>
+                    </ul>
+                    <p style="margin-top:8px">Sysmon là công cụ không thể thiếu trong DFIR (Digital Forensics &amp; Incident Response) vì nó cung cấp bức tranh toàn cảnh về hoạt động trên endpoint.</p>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Các bước thực hiện</h4>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Tìm hiểu Windows Event Logs</div>
+                            <div class="step-desc">Mở Event Viewer trên Windows. Thực hành đọc các Event ID quan trọng: 4625 (failed login), 4672 (admin login), 6008 (shutdown).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Cài đặt Sysmon</div>
+                            <div class="step-desc">Tải Sysmon từ Microsoft. Cài đặt với config file (SwiftOnSecurity config là phổ biến nhất cho lab).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Cấu hình Wazuh Agent thu thập Sysmon logs</div>
+                            <div class="step-desc">Cấu hình Wazuh Agent đọc Sysmon event channel và forward logs về Wazuh Server.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Viết Wazuh rules phát hiện hành vi đáng ngờ</div>
+                            <div class="step-desc">Tạo rules phát hiện: suspicious process (powershell-encoded-command), lateral movement, credential access.</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Đọc và phân tích các Event ID quan trọng trong Event Viewer <span class="todo-tag tag-theory">Lý thuyết</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Cài đặt và cấu hình Sysmon với SwiftOnSecurity config <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Cấu hình Wazuh Agent thu thập Sysmon logs <span class="todo-tag tag-config">Cấu hình</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Viết Wazuh rules phát hiện hành vi đáng ngờ từ Sysmon <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Brute Force Attack -->
+        <div class="section-label">⚔️ Mô phỏng &amp; Phát hiện tấn công</div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:rgba(239,68,68,0.15)">💥</div>
+                    <div>
+                        <div class="card-title">7. Brute Force Attack — Simulation, Detection &amp; Defense</div>
+                        <div class="card-meta">Hydra · Event ID 4625 · Wazuh rules · Biện pháp phòng thủ</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert-box danger">
+                    <span class="alert-icon">⚠️</span>
+                    <div><strong>Cảnh báo bảo mật:</strong> Chỉ thực hiện mô phỏng tấn công trong môi trường lab cách ly (các VM mô tả ở trên) hoặc trên hệ thống bạn sở hữu/được ủy quyền kiểm tra. Không bao giờ chạy brute-force trên hệ thống của bên thứ ba hoặc production.</div>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">📖</span> Lý thuyết — Brute Force Attack</h4>
+                    <p><strong>Brute Force Attack</strong> là kỹ thuật tấn công dò password bằng cách thử liên tục tất cả các tổ hợp ký tự có thể. Trong SSH, attacker kết nối liên tục và thử hàng nghìn password mỗi phút.</p>
+                    <p>Biến thể:</p>
+                    <ul>
+                        <li><strong>Simple brute force</strong>: Thử tất cả tổ hợp</li>
+                        <li><strong>Dictionary attack</strong>: Thử từ danh sách password phổ biến (hiệu quả hơn)</li>
+                        <li><strong>Credential stuffing</strong>: Dùng password đã leak từ data breach khác</li>
+                    </ul>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Các bước thực hiện</h4>
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Mô phỏng SSH brute force bằng Hydra</div>
+                            <div class="step-desc">Trên Kali Linux, chạy Hydra để tấn công SSH service đang chạy trong lab. Hydra sẽ thử hàng nghìn password.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Phát hiện qua Windows Event Log (Event ID 4625)</div>
+                            <div class="step-desc">Kiểm tra Event Viewer → Security → Event ID 4625 (An account failed to log on). Xem Source Network Address để xác định attacker IP.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Phát hiện qua Wazuh Dashboard</div>
+                            <div class="step-desc">Xem alerts trên Wazuh Dashboard. Kiểm tra correlation rules đã được cấu hình để highlight authentication failures.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Áp dụng biện pháp phòng thủ</div>
+                            <div class="step-desc">Triển khai: strong password policy, MFA, account lockout threshold, Wazuh active response (block attacker IP bằng firewall).</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="code-block">
+# Ví dụ lệnh Hydra (chỉ dùng trong lab cách ly!)
+hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://TARGET_IP -V</div>
+                <div class="theory-block">
+                    <h4><span class="icon">🛡️</span> Biện pháp phòng thủ</h4>
+                    <table class="info-table">
+                        <tr><th>Biện pháp</th><th>Mô tả</th></tr>
+                        <tr><td>Strong Password Policy</td><td>Yêu cầu password dài, phức tạp, thay đổi định kỳ</td></tr>
+                        <tr><td>Multi-Factor Authentication (MFA)</td><td>Bắt buộc xác thực nhiều lớp — password + OTP/token</td></tr>
+                        <tr><td>Account Lockout</td><td>Khóa tài khoản sau N lần đăng nhập thất bại liên tiếp</td></tr>
+                        <tr><td>Fail2ban / Wazuh Active Response</td><td>Tự động block IP sau N failed attempts</td></tr>
+                        <tr><td>Port Knocking</td><td>Ẩn SSH port cho đến khi client gửi đúng sequence</td></tr>
+                        <tr><td>Key-based Authentication</td><td>Chỉ cho phép đăng nhập bằng SSH key, disable password auth</td></tr>
+                    </table>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Mô phỏng SSH brute force bằng Hydra trong lab cách ly <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Phân tích Event ID 4625 trong Windows Event Viewer <span class="todo-tag tag-theory">Phân tích</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Xác minh Wazuh phát hiện brute force attack qua alerts <span class="todo-tag tag-test">Kiểm tra</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Triển khai MFA, account lockout, active response <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== IDS + ML ======================== -->
+    <div class="section" id="section-ids-ml">
+
+        <div class="hero-card">
+            <div class="hero-badge" style="background:var(--accent-2-dim);color:var(--accent-2)">🤖 Phần 2</div>
+            <div class="hero-title">Real-time Network IDS using Machine Learning</div>
+            <div class="hero-desc">Xây dựng hệ thống phát hiện xâm nhập mạng bằng Machine Learning với dataset CICIDS2017, so sánh 5 mô hình, chọn Random Forest và deploy để sinh real-time alerts theo định dạng Suricata.</div>
+        </div>
+
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-flex">
+                <div class="progress-label">
+                    <span>Tiến độ phần IDS + ML</span>
+                    <span id="pct-ids">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="fill-ids" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-label">📖 Lý thuyết nền tảng</div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🗃️</span> Dataset CICIDS2017</h4>
+            <p>Bộ dữ liệu chuẩn quốc tế về phát hiện xâm nhập mạng, được phát triển bởi <strong>Canadian Institute for Cybersecurity (CIC)</strong>.</p>
+            <table class="info-table">
+                <tr><th>Thuộc tính</th><th>Giá trị</th></tr>
+                <tr><td>Tổng cột</td><td>79 cột (78 numerical + 1 Label)</td></tr>
+                <tr><td>Loại lưu lượng</td><td>Benign + DoS, DDoS, Web Attack, PortScan, Infiltration...</td></tr>
+                <tr><td>Network flow features</td><td>Flow duration, packet lengths, ports, TCP/UDP flags, bytes/s, packets/s</td></tr>
+                <tr><td>Thách thức</td><td>Highly imbalanced — phần lớn là Benign</td></tr>
+                <tr><td>Định dạng</td><td>8 file CSV (Thursday-Friday, Wednesday, etc.)</td></tr>
+            </table>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🤖</span> 5 Mô hình Machine Learning</h4>
+            <table class="info-table">
+                <tr><th>Mô hình</th><th>Loại</th><th>Nguyên lý</th><th>Ưu điểm</th></tr>
+                <tr><td>Logistic Regression</td><td>Tuyến tính</td><td>Tính xác suất bằng sigmoid function</td><td>Nhanh, dễ hiểu, baseline model</td></tr>
+                <tr><td>SVM</td><td>Hyperplane</td><td>Tìm hyperplane phân tách classes trong không gian nhiều chiều</td><td>Hiệu quả trên high-dimensional data</td></tr>
+                <tr><td>Naive Bayes</td><td>Xác suất</td><td>Tính xác suất có điều kiện theo định lý Bayes</td><td>Nhanh, ít dữ liệu cũng chạy được</td></tr>
+                <tr><td>KNN</td><td>Instance-based</td><td>So sánh với K láng giềng gần nhất (Euclidean distance)</td><td>Đơn giản, không cần train model</td></tr>
+                <tr><td>Random Forest</td><td>Ensemble</td><td>Kết hợp N decision trees, vote kết quả</td><td>Chính xác nhất, chống overfitting tốt</td></tr>
+            </table>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">📊</span> Các chỉ số đánh giá</h4>
+            <ul>
+                <li><strong>Accuracy</strong>: Tổng số dự đoán đúng / Tổng số mẫu</li>
+                <li><strong>Precision</strong>: TP / (TP + FP) — Trong số các mẫu dự đoán là attack, bao nhiêu đúng?</li>
+                <li><strong>Recall (Sensitivity)</strong>: TP / (TP + FN) — Trong số các attack thực sự, phát hiện được bao nhiêu?</li>
+                <li><strong>F1-Score</strong>: 2 × (Precision × Recall) / (Precision + Recall) — Trung bình điều hòa</li>
+            </ul>
+            <div class="alert-box">
+                <span class="alert-icon">💡</span>
+                <div>Trong cybersecurity, <strong>Recall</strong> cho attack classes quan trọng hơn Precision. Bỏ sót một cuộc tấn công thực sự (FN) nguy hiểm hơn nhiều so với false alarm (FP).</div>
+            </div>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">⚖️</span> Xử lý Class Imbalance</h4>
+            <p>Dataset CICIDS2017 có phần lớn là Benign traffic, các attack classes rất ít. Cần cân bằng lại để model không bias về majority class.</p>
+            <table class="info-table">
+                <tr><th>Kỹ thuật</th><th>Hoạt động</th><th>Công cụ</th></tr>
+                <tr><td>SMOTE (Over-sampling)</td><td>Tạo mẫu giả cho minority classes bằng interpolation</td><td><code>imblearn.over_sampling.SMOTE</code></td></tr>
+                <tr><td>RandomUnderSampler</td><td>Giảm mẫu majority class (BENIGN) về mức threshold</td><td><code>imblearn.under_sampling.RandomUnderSampler</code></td></tr>
+                <tr><td>StandardScaler</td><td>Chuẩn hóa features về mean=0, std=1</td><td><code>sklearn.preprocessing.StandardScaler</code></td></tr>
+                <tr><td>LabelEncoder</td><td>Mã hóa Label column thành số</td><td><code>sklearn.preprocessing.LabelEncoder</code></td></tr>
+            </table>
+        </div>
+
+        <div class="section-label">📋 Các bước thực hành</div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-1-dim)">🔧</div>
+                    <div>
+                        <div class="card-title">1. Git &amp; GitHub Setup</div>
+                        <div class="card-meta">Tạo repository · Commit theo milestone · Viết README.md</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Tạo GitHub repository tên <code>Network-Intrusion-Detection-ML</code> <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Clone repository về máy local <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Viết README.md với: Project Introduction, Installation Guide, Usage, Results Summary <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Commit sau mỗi milestone (git commit -m "feat: ...")</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-2-dim)">📊</div>
+                    <div>
+                        <div class="card-title">2. EDA &amp; Data Preprocessing</div>
+                        <div class="card-meta">Merge 8 CSV files · Clean data · Memory optimization · EDA plots</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="code-block"># Bước 1: Merge 8 CSV files
+import pandas as pd
+import glob
+csv_files = glob.glob('CICIDS2017/*.csv')
+df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
+
+# Bước 2: Clean column names
+df.columns = df.columns.str.strip()
+
+# Bước 3: Handle missing & infinite values
+import numpy as np
+df = df.replace([np.inf, -np.inf], np.nan)
+df = df.fillna(df.median())
+
+# Bước 4: Drop zero-variance features & duplicates
+df = df.loc[:, df.var() != 0]
+df = df.drop_duplicates()
+
+# Bước 5: Memory optimization
+df = df.astype('float32')
+# int64 → uint8/int16, float64 → float32</div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Merge 8 file CSV thành 1 DataFrame <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Clean data: strip whitespace, handle inf/NaN bằng median <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Drop zero-variance features và duplicate rows <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Memory optimization: downcast int64 → uint8/int16, float64 → float32 <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Vẽ distribution plot của attack types và correlation heatmap <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-3-dim)">⚖️</div>
+                    <div>
+                        <div class="card-title">3. Handling Class Imbalance</div>
+                        <div class="card-meta">SMOTE · RandomUnderSampler · StandardScaler · LabelEncoder</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="code-block">from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import RandomUnderSampler
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+# Encode label
+le = LabelEncoder()
+y = le.fit_transform(df['Label'])
+X = df.drop('Label', axis=1)
+
+# Scale
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Over-sample minority classes (10% of majority)
+smote = SMOTE(sampling_strategy=0.1, random_state=42)
+X_res, y_res = smote.fit_resample(X_scaled, y)
+
+# Under-sample majority class
+rus = RandomUnderSampler(sampling_strategy=0.5, random_state=42)
+X_balanced, y_balanced = rus.fit_resample(X_res, y_res)</div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Encode cột Label bằng LabelEncoder <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Scale numerical features bằng StandardScaler <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">SMOTE: over-sample minority lên 10% majority class size <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">RandomUnderSampler: reduce majority class về 50% of target <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-4-dim)">🎯</div>
+                    <div>
+                        <div class="card-title">4. Feature Selection — 18 Core Features</div>
+                        <div class="card-meta">Chọn 18 features tối ưu · Real-time processing speed</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="code-block">selected_features = [
+    'Protocol', 'Flow Duration', 'Tot Fwd Pkts', 'Tot Bwd Pkts',
+    'TotLen Fwd Pkts', 'TotLen Bwd Pkts', 'Fwd Pkt Len Mean',
+    'Bwd Pkt Len Mean', 'Flow Byts/s', 'Flow Pkts/s',
+    'Pkt Len Mean', 'Pkt Len Std', 'SYN Flag Cnt',
+    'ACK Flag Cnt', 'FIN Flag Cnt', 'RST Flag Cnt',
+    'PSH Flag Cnt', 'URG Flag Cnt'
+]
+
+X_selected = X_balanced[selected_features]</div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Chọn 18 core features để tối ưu model performance &amp; real-time speed <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Filter cả train và test set với 18 features này</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-5-dim)">📈</div>
+                    <div>
+                        <div class="card-title">5. Model Implementation &amp; Comparison</div>
+                        <div class="card-meta">Train 5 ML models · Classification report · Confusion Matrix · Select Best</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="code-block">from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+
+models = {
+    'Logistic Regression': LogisticRegression(max_iter=1000),
+    'SVM': SVC(kernel='rbf'),
+    'Naive Bayes': GaussianNB(),
+    'KNN': KNeighborsClassifier(n_neighbors=5),
+    'Random Forest': RandomForestClassifier(n_estimators=100)
+}
+
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    print(f"=== {name} ===")
+    print(classification_report(y_test, y_pred))
+    # Plot confusion matrix
+    cm = confusion_matrix(y_test, y_pred)
+    plt.imshow(cm, cmap='Blues')
+    plt.title(name)
+    plt.show()</div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Train Logistic Regression, SVM, Naive Bayes, KNN, Random Forest <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Generate classification_report cho mỗi model (Accuracy, Precision, Recall, F1) <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Vẽ Confusion Matrix cho mỗi model, phân tích Recall cho attack classes <span class="todo-tag tag-practice">Phân tích</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">So sánh 5 models, chọn <strong>Random Forest</strong> làm best model <span class="todo-tag tag-theory">Lý thuyết</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Viết comparison table trong README.md</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-6-dim)">🚀</div>
+                    <div>
+                        <div class="card-title">6. Deployment — Real-time Alert Generation</div>
+                        <div class="card-meta">Load model · Simulate network flow · Suricata-style alerts · Save .pkl</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="code-block">import joblib
+
+# Save model
+joblib.dump(best_model, 'random_forest_ids.pkl')
+
+# Load model (deployment)
+model = joblib.load('random_forest_ids.pkl')
+
+def predict_intrusion(flow_data):
+    """Simulate real-time network flow classification."""
+    prediction = model.predict([flow_data])[0]
+    label = label_encoder.inverse_transform([prediction])[0]
+
+    if label != 'BENIGN':
+        alert = f"[ALERT] Suspicious traffic detected: {label}. Destination Port: {flow_data[0]}"
+        print(alert)
+        with open('alerts.log', 'a') as f:
+            f.write(alert + '\n')
+    return label</div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Save best Random Forest model thành file .pkl bằng joblib <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Viết function classify network flow, sinh Suricata-style alert nếu không phải BENIGN <span class="todo-tag tag-code">Code</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Tạo alerts.log ghi tất cả alerts (tùy chọn)</span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Xác minh real-time alert generation hoạt động đúng</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-label">📦 Deliverables</div>
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:rgba(251,146,60,0.15)">📦</div>
+                    <div>
+                        <div class="card-title">Nộp bài — Yêu cầu Submit</div>
+                        <div class="card-meta">GitHub repository · Source code · README · Model file</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Public/Shared GitHub Repository Link — có commit history thể hiện làm liên tục và có cấu trúc</span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Source Code (.ipynb hoặc .py) — chạy từ đầu đến cuối, hiển thị charts/outputs, có comments</span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">README.md — project architecture, comparison table 5 ML models, setup instructions</span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Saved Model (.pkl) — nếu file > 100MB thì dùng Git LFS hoặc đường dẫn Google Drive trong README</span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">alerts.log (tùy chọn) — file output từ real-time alert generation</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== ACLs ======================== -->
+    <div class="section" id="section-acl">
+
+        <div class="hero-card">
+            <div class="hero-badge" style="background:var(--accent-3-dim);color:var(--accent-3)">🔀 Phần 3</div>
+            <div class="hero-title">Configuring Standard ACLs</div>
+            <div class="hero-desc">Cấu hình Access Control Lists (Standard ACLs) trên thiết bị mạng Cisco trong Cisco Packet Tracer để kiểm soát truy cập mạng ở tầng Network Layer.</div>
+        </div>
+
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-flex">
+                <div class="progress-label">
+                    <span>Tiến độ phần ACLs</span>
+                    <span id="pct-acl">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="fill-acl" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-label">📖 Lý thuyết nền tảng</div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🗂️</span> Access Control List (ACL) là gì?</h4>
+            <p><strong>ACL (Access Control List)</strong> là danh sách kiểm soát truy cập trên thiết bị mạng (Router, Switch) dùng để <strong>lọc lưu lượng mạng</strong> — cho phép (permit) hoặc từ chối (deny) packet dựa trên điều kiện định sẵn.</p>
+            <p>ACL hoạt động như một "người gác cổng" tại interface của thiết bị mạng. Mỗi packet đi qua interface đều được kiểm tra against ACL rules theo thứ tự từ trên xuống.</p>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">📂</span> Phân loại ACL</h4>
+            <table class="info-table">
+                <tr><th>Loại</th><th>Số hiệu</th><th>Lọc theo</th><th>Vị trí đặt</th><th>Đặc điểm</th></tr>
+                <tr><td>Standard ACL</td><td>1-99, 1300-1999</td><td>Chỉ Source IP</td><td>Gần destination nhất</td><td>Đơn giản, ít chi tiết</td></tr>
+                <tr><td>Extended ACL</td><td>100-199, 2000-2699</td><td>Source, Dest IP, Protocol, Port</td><td>Gần source nhất</td><td>Chi tiết, linh hoạt hơn</td></tr>
+                <tr><td>Named ACL</td><td>Đặt tên</td><td>Standard hoặc Extended</td><td>Tùy loại</td><td>Dễ quản lý, đặt tên mô tả</td></tr>
+            </table>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">⚙️</span> Quy tắc xử lý của ACL</h4>
+            <div class="arch-diagram">
+┌─────────────────────────────────────────────────┐
+│   PACKET ĐẾN INTERFACE có ACL                  │
+│                   │                            │
+│   ┌───────────────┴───────────────┐             │
+│   │  Kiểm tra ACL rule #1        │             │
+│   │  ┌───────────┴───────────┐   │             │
+│   │  │ MATCH?                │   │             │
+│   │  ├──────┴──────────────┤   │             │
+│   │  │ YES                NO │   │             │
+│   │  ▼                    ▼   │             │
+│   │ DENY → DROP      Tiếp tục │   │             │
+│   │                 kiểm tra  │   │
+│   │               rule #2...  │   │
+│   │                            │   │
+│   └────────────────────────────┘             │
+│              KHÔNG MATCH rule nào              │
+│                   │                           │
+│                   ▼                           │
+│         IMPLICIT DENY ALL                     │
+│         (Tự động từ chối mọi packet           │
+│          nếu không match rule nào)             │
+└─────────────────────────────────────────────────┘</div>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🔄</span> Inbound vs Outbound ACL</h4>
+            <ul>
+                <li><strong>Inbound ACL</strong>: Packet được kiểm tra <strong>TRƯỚC KHI</strong> định tuyến. Nếu deny → packet bị drop ngay, không tốn tài nguyên routing.</li>
+                <li><strong>Outbound ACL</strong>: Packet được kiểm tra <strong>SAU KHI</strong> đã định tuyến, ngay trước khi rời interface.</li>
+            </ul>
+            <p style="margin-top:8px">Best practice: Đặt Extended ACL gần source (để drop sớm), Standard ACL gần destination (vì chỉ có source IP).</p>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">🌐</span> Wildcard Mask</h4>
+            <p>Wildcard mask xác định phạm vi IP được match. Cách tính: <code>255.255.255.255 - subnet_mask = wildcard_mask</code></p>
+            <table class="info-table">
+                <tr><th>Wildcard Mask</th><th>Ý nghĩa</th><th>Ví dụ</th></tr>
+                <tr><td><code>0.0.0.0</code></td><td>Chính xác 1 IP</td><td><code>192.168.1.1 0.0.0.0</code> = chỉ IP đó</td></tr>
+                <tr><td><code>0.0.0.255</code></td><td>Tất cả IP trong subnet /24</td><td><code>192.168.1.0 0.0.0.255</code> = 192.168.1.0/24</td></tr>
+                <tr><td><code>0.0.255.255</code></td><td>Tất cả IP trong /16</td><td><code>192.168.0.0 0.0.255.255</code> = 192.168.0.0/16</td></tr>
+                <tr><td><code>0.255.255.255</code></td><td>Tất cả IP trong /8</td><td><code>10.0.0.0 0.255.255.255</code> = 10.0.0.0/8</td></tr>
+                <tr><td><code>255.255.255.255</code></td><td>Mọi IP (any)</td><td><code>any</code> hoặc <code>0.0.0.0 255.255.255.255</code></td></tr>
+            </table>
+        </div>
+
+        <div class="theory-block">
+            <h4><span class="icon">📖</span> ACL Keywords đặc biệt</h4>
+            <ul>
+                <li><code>any</code> — Khớp với mọi địa chỉ IP (tương đương <code>0.0.0.0 255.255.255.255</code>)</li>
+                <li><code>host</code> — Chỉ một IP cụ thể (tương đương với wildcard <code>0.0.0.0</code>)</li>
+                <li><code>eq</code> — Equal: khớp port cụ thể (VD: <code>eq 80</code>)</li>
+                <li><code>neq</code> — Not equal: khớp port khác port chỉ định</li>
+                <li><code>gt</code> — Greater than: port lớn hơn</li>
+                <li><code>lt</code> — Less than: port nhỏ hơn</li>
+                <li><code>range</code> — Khoảng port (VD: <code>range 20 100</code>)</li>
+            </ul>
+        </div>
+
+        <div class="section-label">💻 Thực hành — Cấu hình Standard ACL</div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-1-dim)">🛠️</div>
+                    <div>
+                        <div class="card-title">1. Cú pháp cơ bản Standard ACL</div>
+                        <div class="card-meta">Lệnh cấu hình · Các bước apply</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="code-block">! Bước 1: Tạo Standard ACL
+Router(config)# access-list &lt;1-99&gt; &lt;permit|deny&gt; &lt;source-ip&gt; &lt;wildcard-mask&gt;
+
+! Ví dụ:
+Router(config)# access-list 10 permit 192.168.1.0 0.0.0.255
+Router(config)# access-list 10 deny 10.0.0.0 0.255.255.255
+Router(config)# access-list 10 permit any
+
+! Bước 2: Apply ACL lên interface
+Router(config)# interface &lt;interface-id&gt;
+Router(config-if)# ip access-group &lt;acl-number&gt; &lt;in|out&gt;
+
+! Ví dụ:
+Router(config)# interface g0/0
+Router(config-if)# ip access-group 10 out
+
+! Xóa ACL
+Router(config)# no access-list 10
+
+! Xóa apply trên interface
+Router(config-if)# no ip access-group 10 out
+
+! Kiểm tra
+Router# show access-lists
+Router# show ip interface g0/0</div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Tạo Standard ACL với permit một dải IP cụ thể <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Deny một dải IP bằng wildcard mask đúng <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Apply ACL lên interface (in/out) <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Sử dụng <code>show access-lists</code> và <code>show ip interface</code> để xác minh <span class="todo-tag tag-test">Kiểm tra</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-2-dim)">🔒</div>
+                    <div>
+                        <div class="card-title">2. Các kịch bản thực hành Lab</div>
+                        <div class="card-meta">Permit/deny networks · Host-specific · Named ACL</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="theory-block">
+                    <h4><span class="icon">🏢</span> Kịch bản 1: Chỉ cho phép một mạng cụ thể</h4>
+                    <div class="code-block">! Chỉ cho phép mạng 192.168.10.0/24 truy cập, deny tất cả khác
+Router(config)# access-list 1 permit 192.168.10.0 0.0.0.255
+Router(config)# access-list 1 deny any
+Router(config)# interface s0/0/0
+Router(config-if)# ip access-group 1 in</div>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🖥️</span> Kịch bản 2: Chỉ cho phép một host cụ thể</h4>
+                    <div class="code-block">! Cho phép một máy truy cập, deny tất cả khác
+Router(config)# access-list 5 permit host 192.168.1.100
+Router(config)# access-list 5 deny any
+Router(config)# interface g0/1
+Router(config-if)# ip access-group 5 in</div>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">📛</span> Kịch bản 3: Named ACL</h4>
+                    <div class="code-block">! Sử dụng Named ACL thay vì số
+Router(config)# ip access-list standard ADMIN-ACCESS
+Router(config-std-nacl)# permit host 192.168.1.10
+Router(config-std-nacl)# permit 192.168.2.0 0.0.0.255
+Router(config-std-nacl)# deny any
+Router(config-std-nacl)# exit
+Router(config)# interface g0/0
+Router(config-if)# ip access-group ADMIN-ACCESS out</div>
+                </div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔄</span> Kịch bản 4: ACL với remarks (ghi chú)</h4>
+                    <div class="code-block">! Thêm remark để dễ quản lý
+Router(config)# access-list 20 remark ALLOW_ADMIN_NETWORK
+Router(config)# access-list 20 permit 10.0.0.0 0.0.0.255
+Router(config)# access-list 20 remark DENY_GUEST_NETWORK
+Router(config)# access-list 20 deny 172.16.0.0 0.0.255.255
+Router(config)# access-list 20 permit any</div>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Thực hành kịch bản 1: Permit một network, deny tất cả <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Thực hành kịch bản 2: Permit một host cụ thể bằng host keyword <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Thực hành kịch bản 3: Named ACL để dễ quản lý <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Thực hành kịch bản 4: ACL với remarks để ghi chú mục đích <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                    <div class="card-icon" style="background:var(--accent-3-dim)">✅</div>
+                    <div>
+                        <div class="card-title">3. Xác minh &amp; Troubleshooting</div>
+                        <div class="card-meta">Show commands · Ping test · Giải quyết vấn đề thường gặp</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="card-check" onclick="event.stopPropagation();checkSection(this)"></div>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="code-block">! Các lệnh kiểm tra quan trọng
+Router# show access-lists
+Router# show ip interface &lt;interface-id&gt;
+Router# show running-config | include access-list
+
+! Xóa tất cả ACL trên interface
+Router(config-if)# no ip access-group 10 in
+
+! Ping để test sau khi cấu hình
+Router# ping 192.168.1.1
+
+! Extended ping (chỉ định source)
+Router# ping
+Protocol [ip]:
+Target IP address: 192.168.1.1
+Repeat count [5]: 10
+Datagram size [100]:
+Timeout in seconds [2]:
+Extended commands [n]: y
+Source address or interface: 192.168.0.1</div>
+                <div class="theory-block">
+                    <h4><span class="icon">🔧</span> Troubleshooting thường gặp</h4>
+                    <table class="info-table">
+                        <tr><th>Vấn đề</th><th>Nguyên nhân</th><th>Giải pháp</th></tr>
+                        <tr><td>Không có traffic đi qua dù đã permit</td><td>Quên apply ACL lên interface</td><td><code>ip access-group &lt;id&gt; &lt;in|out&gt;</code></td></tr>
+                        <tr><td>Tất cả traffic đều bị deny</td><td>Thiếu <code>permit any</code> cuối ACL</td><td>Thêm <code>permit any</code> hoặc hiểu Implicit Deny</td></tr>
+                        <tr><td>ACL không hoạt động</td><td>Sai direction (in/out)</td><td>Kiểm tra hướng traffic và chọn đúng in/out</td></tr>
+                        <tr><td>Không ping được từ xa</td><td>ACL block ICMP</td><td>Thêm rule permit ICMP hoặc kiểm tra ACL</td></tr>
+                        <tr><td>Device không truy cập được service</td><td>ACL trên interface sai</td><td>Show access-lists để xem match count</td></tr>
+                    </table>
+                </div>
+                <ul class="todo-list">
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Sử dụng show commands để xác minh ACL hoạt động đúng <span class="todo-tag tag-test">Kiểm tra</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Ping test để xác minh traffic được permit/deny đúng <span class="todo-tag tag-test">Kiểm tra</span></span>
+                        </div>
+                    </li>
+                    <li class="todo-item">
+                        <div class="todo-checkbox" onclick="checkTodo(this)"></div>
+                        <div class="todo-content">
+                            <span class="todo-text">Xử lý một số vấn đề thường gặp với Standard ACL <span class="todo-tag tag-practice">Thực hành</span></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- FOOTER PROGRESS -->
+<div class="footer-progress">
+    <div class="footer-inner">
+        <span class="footer-text" id="footer-text">Hoàn thành: 0 / 0 tasks</span>
+        <div class="footer-bar">
+            <div class="footer-fill" id="footer-fill" style="width:0%"></div>
+        </div>
+        <span class="footer-pct" id="footer-pct">0%</span>
+    </div>
+</div>
+
+<script>
+    // ==================== STATE ====================
+    let todos = [];
+    let sections = {};
+
+    function initState() {
+        const saved = localStorage.getItem('lab6_todos');
+        if (saved) {
+            const data = JSON.parse(saved);
+            todos = data.todos;
+            sections = data.sections;
+        } else {
+            todos = Array.from(document.querySelectorAll('.todo-checkbox')).map((el, i) => ({
+                id: i,
+                checked: false,
+                el: el
+            }));
+            sections = {};
+            document.querySelectorAll('.card-check').forEach((el, i) => {
+                sections[i] = false;
+            });
+        }
+        applyState();
+    }
+
+    function saveState() {
+        const data = {
+            todos: todos.map(t => ({ id: t.id, checked: t.checked })),
+            sections: sections
+        };
+        localStorage.setItem('lab6_todos', JSON.stringify(data));
+    }
+
+    function applyState() {
+        todos.forEach(t => {
+            if (t.el) {
+                if (t.checked) {
+                    t.el.classList.add('checked');
+                    const text = t.el.closest('.todo-item').querySelector('.todo-text');
+                    if (text) text.classList.add('done');
+                } else {
+                    t.el.classList.remove('checked');
+                    const text = t.el.closest('.todo-item').querySelector('.todo-text');
+                    if (text) text.classList.remove('done');
+                }
+            }
+        });
+        updateAllProgress();
+    }
+
+    // ==================== TODO CHECK ====================
+    function checkTodo(el) {
+        const item = el.closest('.todo-item');
+        const idx = Array.from(document.querySelectorAll('.todo-item')).indexOf(item);
+        todos[idx].checked = !todos[idx].checked;
+        applyState();
+        saveState();
+    }
+
+    function checkSection(el) {
+        const card = el.closest('.card');
+        const checkboxes = card.querySelectorAll('.todo-checkbox');
+        const allChecked = Array.from(checkboxes).every(cb => cb.classList.contains('checked'));
+        const anyChecked = Array.from(checkboxes).some(cb => cb.classList.contains('checked'));
+
+        if (allChecked) {
+            el.classList.remove('checked');
+            checkboxes.forEach(cb => {
+                const idx = Array.from(document.querySelectorAll('.todo-item')).indexOf(cb.closest('.todo-item'));
+                todos[idx].checked = false;
+            });
+        } else {
+            el.classList.add('checked');
+            checkboxes.forEach(cb => {
+                const idx = Array.from(document.querySelectorAll('.todo-item')).indexOf(cb.closest('.todo-item'));
+                todos[idx].checked = true;
+            });
+        }
+        applyState();
+        saveState();
+    }
+
+    // ==================== CARD TOGGLE ====================
+    function toggleCard(header) {
+        const card = header.closest('.card');
+        const body = card.querySelector('.card-body');
+        const chevron = header.querySelector('.chevron');
+
+        if (body.classList.contains('open')) {
+            body.classList.remove('open');
+            chevron.classList.remove('open');
+        } else {
+            body.classList.add('open');
+            chevron.classList.add('open');
+        }
+    }
+
+    // ==================== TAB SWITCH ====================
+    function switchTab(tabName) {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+        document.querySelector(`.nav-tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        document.getElementById(`section-${tabName}`).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==================== PROGRESS ====================
+    function updateAllProgress() {
+        const total = todos.length;
+        const done = todos.filter(t => t.checked).length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        document.getElementById('stat-done').textContent = done;
+        document.getElementById('stat-total').textContent = total;
+
+        document.getElementById('pct-overall').textContent = pct + '%';
+        document.getElementById('fill-overall').style.width = pct + '%';
+
+        document.getElementById('footer-text').textContent = `Hoàn thành: ${done} / ${total} tasks`;
+        document.getElementById('footer-fill').style.width = pct + '%';
+        document.getElementById('footer-pct').textContent = pct + '%';
+
+        // Per-section progress
+        updateSectionProgress('soc', 'section-soc-lab', 'soc');
+        updateSectionProgress('ids', 'section-ids-ml', 'ids');
+        updateSectionProgress('acl', 'section-acl', 'acl');
+    }
+
+    function updateSectionProgress(prefix, sectionId, progId) {
+        const section = document.getElementById(sectionId);
+        const allTodos = section.querySelectorAll('.todo-item');
+        const checked = section.querySelectorAll('.todo-checkbox.checked');
+        const total = allTodos.length;
+        const done = checked.length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        const progEl = document.getElementById(`prog-${progId}`);
+        if (progEl) progEl.textContent = `${done}/${total}`;
+
+        const pctEl = document.getElementById(`pct-${progId}`);
+        if (pctEl) pctEl.textContent = pct + '%';
+
+        const fillEl = document.getElementById(`fill-${progId}`);
+        if (fillEl) fillEl.style.width = pct + '%';
+    }
+
+    // ==================== RESET ====================
+    function resetAll() {
+        if (confirm('Bạn có chắc muốn reset tất cả tiến độ?')) {
+            localStorage.removeItem('lab6_todos');
+            location.reload();
+        }
+    }
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', initState);
+</script>
+
+</body>
+</html>
