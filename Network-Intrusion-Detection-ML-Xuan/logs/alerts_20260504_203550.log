@@ -1,0 +1,187 @@
+ALERT LOG - Started 2026-05-04 20:35:50
+Total flows: 260
+======================================================================
+
+[ALERT] Flow #0081 | 2026-05-04 20:36:15.958 | DoS Hulk
+======================================================================
+  [ALERT] 2026-05-04 20:36:15.958
+======================================================================
+  Classification  : DoS Hulk
+  Dest. Port      : 80
+  Flow Duration   : 83,508,399 us
+  Flow Bytes/s    : 143.82
+  Flow Packets/s  : 0.16
+  SYN Flags       : 0
+  ACK Flags       : 1
+
+  Suricata EVE JSON:
+  {
+    "timestamp": "2026-05-04 20:36:15.958",
+    "event_type": "alert",
+    "dest_port": 80,
+    "alert": {
+      "signature_id": 2000004,
+      "rev": 1,
+      "signature": "ML-IDS: DoS Hulk traffic detected"
+    }
+  }
+======================================================================
+
+[ALERT] Flow #0082 | 2026-05-04 20:36:16.288 | DDoS
+======================================================================
+  [ALERT] 2026-05-04 20:36:16.288
+======================================================================
+  Classification  : DDoS
+  Dest. Port      : 80
+  Flow Duration   : 99,413,685 us
+  Flow Bytes/s    : 120.33
+  Flow Packets/s  : 0.13
+  SYN Flags       : 0
+  ACK Flags       : 1
+
+  Suricata EVE JSON:
+  {
+    "timestamp": "2026-05-04 20:36:16.288",
+    "event_type": "alert",
+    "dest_port": 80,
+    "alert": {
+      "signature_id": 2000002,
+      "rev": 1,
+      "signature": "ML-IDS: DDoS traffic detected"
+    }
+  }
+======================================================================
+
+[ALERT] Flow #0084 | 2026-05-04 20:36:16.929 | DDoS
+======================================================================
+  [ALERT] 2026-05-04 20:36:16.929
+======================================================================
+  Classification  : DDoS
+  Dest. Port      : 80
+  Flow Duration   : 98,642,520 us
+  Flow Bytes/s    : 120.90
+  Flow Packets/s  : 0.13
+  SYN Flags       : 0
+  ACK Flags       : 1
+
+  Suricata EVE JSON:
+  {
+    "timestamp": "2026-05-04 20:36:16.929",
+    "event_type": "alert",
+    "dest_port": 80,
+    "alert": {
+      "signature_id": 2000002,
+      "rev": 1,
+      "signature": "ML-IDS: DDoS traffic detected"
+    }
+  }
+======================================================================
+
+[ALERT] Flow #0088 | 2026-05-04 20:36:17.896 | DoS Hulk
+======================================================================
+  [ALERT] 2026-05-04 20:36:17.896
+======================================================================
+  Classification  : DoS Hulk
+  Dest. Port      : 80
+  Flow Duration   : 99,417,810 us
+  Flow Bytes/s    : 120.32
+  Flow Packets/s  : 0.13
+  SYN Flags       : 0
+  ACK Flags       : 0
+
+  Suricata EVE JSON:
+  {
+    "timestamp": "2026-05-04 20:36:17.896",
+    "event_type": "alert",
+    "dest_port": 80,
+    "alert": {
+      "signature_id": 2000004,
+      "rev": 1,
+      "signature": "ML-IDS: DoS Hulk traffic detected"
+    }
+  }
+======================================================================
+
+[ALERT] Flow #0221 | 2026-05-04 20:36:58.827 | DDoS
+======================================================================
+  [ALERT] 2026-05-04 20:36:58.827
+======================================================================
+  Classification  : DDoS
+  Dest. Port      : 80
+  Flow Duration   : 8,098,507 us
+  Flow Bytes/s    : 1,439.40
+  Flow Packets/s  : 1.48
+  SYN Flags       : 0
+  ACK Flags       : 1
+
+  Suricata EVE JSON:
+  {
+    "timestamp": "2026-05-04 20:36:58.827",
+    "event_type": "alert",
+    "dest_port": 80,
+    "alert": {
+      "signature_id": 2000002,
+      "rev": 1,
+      "signature": "ML-IDS: DDoS traffic detected"
+    }
+  }
+======================================================================
+
+[ALERT] Flow #0226 | 2026-05-04 20:37:00.210 | DDoS
+======================================================================
+  [ALERT] 2026-05-04 20:37:00.210
+======================================================================
+  Classification  : DDoS
+  Dest. Port      : 80
+  Flow Duration   : 95,902,959 us
+  Flow Bytes/s    : 121.55
+  Flow Packets/s  : 0.13
+  SYN Flags       : 0
+  ACK Flags       : 1
+
+  Suricata EVE JSON:
+  {
+    "timestamp": "2026-05-04 20:37:00.210",
+    "event_type": "alert",
+    "dest_port": 80,
+    "alert": {
+      "signature_id": 2000002,
+      "rev": 1,
+      "signature": "ML-IDS: DDoS traffic detected"
+    }
+  }
+======================================================================
+
+[ALERT] Flow #0228 | 2026-05-04 20:37:00.822 | DDoS
+======================================================================
+  [ALERT] 2026-05-04 20:37:00.822
+======================================================================
+  Classification  : DDoS
+  Dest. Port      : 80
+  Flow Duration   : 98,977,577 us
+  Flow Bytes/s    : 117.77
+  Flow Packets/s  : 0.13
+  SYN Flags       : 0
+  ACK Flags       : 1
+
+  Suricata EVE JSON:
+  {
+    "timestamp": "2026-05-04 20:37:00.822",
+    "event_type": "alert",
+    "dest_port": 80,
+    "alert": {
+      "signature_id": 2000002,
+      "rev": 1,
+      "signature": "ML-IDS: DDoS traffic detected"
+    }
+  }
+======================================================================
+
+
+======================================================================
+  SIMULATION COMPLETE
+  Flows processed : 260
+  Attacks detected : 7
+  Alert rate       : 2.7%
+  Log saved to     : C:\Users\ADMIN\Desktop\Truong\HKII-Nam-3\An toàn hệ thống thông tin\Lab5va6\Lab-6\Network-Intrusion-Detection-ML-Xuan\logs\alerts_20260504_203550.log
+======================================================================

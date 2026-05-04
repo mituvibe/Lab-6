@@ -1,0 +1,1 @@
+1. Download Datasets (https://cicresearch.ca/CICDataset/CIC-IDS-2017/) and move it to data/
